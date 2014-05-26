@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# debug
+# set -x
+
+# Nagios alert status
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+
+PDNS_CONTROL=$(type -P pdns_control)
+
+# Check PowerDNS Status.
+PDNS_STATUS=$(${PDNS_CONTROL} status)
+if [[ $? -eq 1 ]]; then
+        echo -n "CRITICAL - PowerDNS is not running !"
+        exit "$STATE_CRITICAL"
+fi
+
+# Check PowerDNS guardian.
+GUARDIAN_STATUS=$(${PDNS_CONTROL} ping)
+
+if [[ ! "$GUARDIAN_STATUS" == "PONG" ]]; then
+        echo -n "CRITICAL - Guardian not answering !"
+        exit "$STATE_CRITICAL"
+fi
+
+exit "$STATE_OK"
