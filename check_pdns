@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# DO NOT FORGET TO ADD nagios to group pdns otherwise the script could not acces# to pdns_control socket. 
 
 # debug
 # set -x
@@ -26,4 +27,5 @@ if [[ ! "$GUARDIAN_STATUS" == "PONG" ]]; then
         exit "$STATE_CRITICAL"
 fi
 
+echo "OK"
 exit "$STATE_OK"
