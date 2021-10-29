@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# DO NOT FORGET TO ADD nagios to group pdns otherwise the script could not acces# to pdns_control socket. 
+
+# debug
+# set -x
+
+# Nagios alert status
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+
+PDNS_UTIL=$(type -P pdnsutil)
+
+# Check All Zones PowerDNS All Zones.
+PDNS_RETCODE=$(${PDNS_UTIL} check-all-zones > /dev/null)
+if [[ $? -eq 1 ]]; then
+        echo -n "CRITICAL - At least one zone has an error"
+        exit "$STATE_CRITICAL"
+fi
+
+echo "OK"
+exit "$STATE_OK"
